@@ -1,4 +1,4 @@
-package com.keinye.learn.basis;
+package com.keinye.learn.quickly.basic;
 
 /**
  * 
