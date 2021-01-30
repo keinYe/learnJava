@@ -21,6 +21,8 @@ public class ClassInfo {
 	 * 
 	 * JVM 在运行过程中并不是一次性将所有的类加载到内存中，而是使用到类才加载，我们称为动态加载。
 	 * 利用 JVM 的动态加载特性，我们才能在运行过程中根据条件动态不同的类。
+	 * 通过 Class 实例获取 class 信息的方法称为反射。
+	 * 获取一个类对应的 Class 实例后，就可以获取该类的所有信息。
 	 */
 	
 	public static void main(String[] args) {
