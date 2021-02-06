@@ -27,6 +27,21 @@ public class QueueClass {
 	 * PriorityQueue 按一定优先级获取队列元素。
 	 * PriorityQUeue 它的出队顺序与元素的优先级有关，对 PriorityQueue 调用remove 或 poll 获取总是优先级最高的元素。
 	 * 在使用 PriorityQueue 时需要给元素设定优先级。
+	 * PriorityQueue默认按元素比较的顺序排序（必须实现Comparable接口），也可以通过Comparator自定义排序算法（元素就不必实现Comparable接口）
+	 * 
+	 * Deque 是双端队列，它允许两头进两头出。即可从队尾添加元素也可以从队首添加元素，既可以从队首获取也可以从队尾获取。
+	 * Deque 实际上是对 Queue 接口的扩展，同样可以使用 Queue 的方法，但尽量不要使用 Queue 的方法。
+	 * Deque 的方法如下：
+	 * 1. 添加元素到队尾 addLast(E e)/offerLast(E e)
+	 * 2. 添加元素到队首 addFirst(E e)/offerFirst(E e)
+	 * 3. 获取队首元素并删除 E removeFirst()/E pollFirst()
+	 * 4. 获取队尾元素并删除 E removeLast()/E pllLast()
+	 * 5. 获取队首元素但不删除 E getFirst()/E peekFirst()
+	 * 6. 获取队尾元素但不删除 E getLast()/E peekLast()
+	 * 
+	 * 栈（Stack）是一种后进先出（LIFO）的数据结构，操作栈的元素的方法有：
+	 * 在Java中，我们用Deque可以实现Stack的功能，注意只调用push()/pop()/peek()方法，避免调用Deque的其他方法
+	 * 不要使用遗留类Stack。
 	 */
 	
 	static Queue<String> queue;
