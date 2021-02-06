@@ -1,5 +1,8 @@
 package com.keinye.learn.collection;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 /**
  * Set 不重复元素的集合
  * @author keinYe
@@ -14,4 +17,17 @@ public class SetClass {
 	 * Set 是无序的，SortedSet 是有序的。实现 SortedSet 接口的是 TreeSet 类。
 	 * TreeSet 和 TreeMap 一样添加的元素要么实现 Comparable，要么在创建 set 时传入 Comparable 对象。
 	 */
+	
+	public static void main(String[] args) {
+		Set<String> set = new TreeSet<String>();
+		System.out.println(set.add("apple"));
+		System.out.println(set.add("banana"));
+		System.out.println(set.add("pear"));
+		System.out.println(set.add("orange"));
+		System.out.println(set.add("orange"));
+		
+		for (String string : set) {
+			System.out.println(string);
+		}
+	}
 }
