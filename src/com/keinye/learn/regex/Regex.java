@@ -21,6 +21,12 @@ public class Regex {
 	 * group(1)表示匹配的第一个子串，group(2)表示匹配的第二个子串，以此类推。
 	 * 使用 Matcher 进行分组之前，先调用 matches 判断是否匹配成功，在调用 group 获取分组字符串。
 	 * 
+	 * 正则表达式默认使用贪婪匹配，可以使用？将规则设置为非贪婪匹配。
+	 * 使用正则表达式可以完成以下功能：
+	 * 1. 分割字符串：String.split()
+	 * 2. 搜索子串：Matcher.find()
+	 * 3. 替换字符串：String.replaceAll()
+	 * 
 	 * 正则表达式的匹配规则如下：
 	 * A          匹配指定字符
 	 * \u548c     匹配指定 Unicode 字符
