@@ -1,5 +1,10 @@
 package com.keinye.learn.regex;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+
 /**
  * 正则表达式 Regex
  * @author keinYe
@@ -10,6 +15,11 @@ public class Regex {
 	 * 正则表达式是用字符串表示的一个匹配规则，使用正则表达式可以快速判断给定的字符串是否符合匹配规则，
 	 * java.util.regex 内建了正则表达式引擎。
 	 * 正则表达式从左到右按规则匹配。
+	 * 
+	 * 正则表达式使用(...)分组可以使用 Matcher 对象快速提取子串。
+	 * group(0) 表示匹配的整个字符串。
+	 * group(1)表示匹配的第一个子串，group(2)表示匹配的第二个子串，以此类推。
+	 * 使用 Matcher 进行分组之前，先调用 matches 判断是否匹配成功，在调用 group 获取分组字符串。
 	 * 
 	 * 正则表达式的匹配规则如下：
 	 * A          匹配指定字符
@@ -46,6 +56,9 @@ public class Regex {
 		System.out.println(isLearn("learn Java"));
 		System.out.println(isLearn("learn php"));
 		System.out.println(isLearn("learn Go"));
+		
+		getPhone("010-12345678");
+		getPhone("A01-12345678");
 	}
 	
 	public static boolean isValidPhoneNumber(String phoneNumber) {
@@ -56,5 +69,18 @@ public class Regex {
 	public static boolean isLearn(String str) {
 		String regex = "learn\\s([jJ]ava|[pP]hp|[gG]o)";
 		return str.matches(regex);
+	}
+	
+	public static void getPhone(String str) {
+		String regex = "(0\\d{2,3})-([1-9]\\d{6,7})";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(str);
+		if (m.matches()) {
+			System.out.println(m.group());
+			System.out.println(m.group(1));
+			System.out.println(m.group(2));
+		} else {
+			System.out.println("匹配错误！");
+		}
 	}
 }
