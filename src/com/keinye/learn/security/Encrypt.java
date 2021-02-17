@@ -1,8 +1,10 @@
 package com.keinye.learn.security;
 
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -10,9 +12,13 @@ import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -25,9 +31,12 @@ public class Encrypt {
 	 * 对称加密算法：用一个秘密进行加密和解密。
 	 * 常用的对称加密算法由：DES(56/64)、AES(128/192/256)、IDEA(128)。
 	 * 使用对称加密算法需要制定加密算法、工作模式和填充模式。
+	 * 
+	 * 口令加密算法，通常对用户输入的口令经过 PBE 算法，采用随机数杂凑计算出真正的密钥，再进行加密。
+	 * @throws NoSuchAlgorithmException, GeneralSecurityException 
 	 */
 	
-	public static void main(String[] args) throws UnsupportedEncodingException {
+	public static void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException, GeneralSecurityException {
 		String message = "Hello World!";
 		System.out.println("Message: " + message);
 		byte[] key = "0123456789abcdef".getBytes("UTF-8");
@@ -40,7 +49,14 @@ public class Encrypt {
 		encrypted = encryptAESCBC(key, message.getBytes("UTF-8"));
 		System.out.println("AES(CBC) Encrypted: " + Base64.getEncoder().encodeToString(encrypted));
 		decrypted = decryptAESCBC(key, encrypted);
-		System.out.println("AES(CBC) Decrypted: " + new String(decrypted, "UTF-8"));		
+		System.out.println("AES(CBC) Decrypted: " + new String(decrypted, "UTF-8"));
+	
+		
+		byte[] salt = SecureRandom.getInstanceStrong().generateSeed(16);
+		encrypted = encryptPBE("123", salt, message.getBytes("UTF-8"));
+		System.out.println("PBE Encrypted: " + Base64.getEncoder().encodeToString(encrypted));
+		decrypted = decryptPBE("123", salt, encrypted);
+		System.out.println("PBE Decrypted: " + new String(decrypted, "UTF-8"));
 	}
 	
 	public static byte[] encryptAES(byte[] key, byte[] input) {
@@ -113,4 +129,24 @@ public class Encrypt {
         System.arraycopy(bs2, 0, r, bs1.length, bs2.length);
         return r;
     }
+    
+    public static byte[] encryptPBE(String password, byte[] salt, byte[] input) throws GeneralSecurityException{
+		PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
+		SecretKeyFactory sKeyFactory = SecretKeyFactory.getInstance("PBEWithHmacSHA256AndAES_128");
+		SecretKey sKey = sKeyFactory.generateSecret(keySpec);
+		PBEParameterSpec spec = new PBEParameterSpec(salt, 1000);
+		Cipher cipher = Cipher.getInstance("PBEWithHmacSHA256AndAES_128");
+		cipher.init(Cipher.ENCRYPT_MODE, sKey, spec);
+		return cipher.doFinal(input);
+	}
+    
+    public static byte[] decryptPBE(String password, byte[] salt, byte[] input) throws GeneralSecurityException{
+		PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
+		SecretKeyFactory sKeyFactory = SecretKeyFactory.getInstance("PBEWithHmacSHA256AndAES_128");
+		SecretKey sKey = sKeyFactory.generateSecret(keySpec);
+		PBEParameterSpec spec = new PBEParameterSpec(salt, 1000);
+		Cipher cipher = Cipher.getInstance("PBEWithHmacSHA256AndAES_128");
+		cipher.init(Cipher.DECRYPT_MODE, sKey, spec);
+		return cipher.doFinal(input);		
+	}
 }
