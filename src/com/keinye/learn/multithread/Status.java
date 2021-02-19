@@ -39,9 +39,12 @@ public class Status {
 			}
 			System.out.println("new thread run!");
 		});
+		System.out.println(thread.getState().name()); // NEW
 		System.out.println("thread start!");
 		thread.start();
+		System.out.println(thread.getState().name()); // RUNNABLE
 		thread.join();
+		System.out.println(thread.getState().name()); // TERMINATED
 		System.out.println("thread stop");
 	}
 }
