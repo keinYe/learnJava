@@ -22,7 +22,7 @@ public class QueueClass {
 	 * 4. E element()/E peek(): 获取队首元素但不从队列中删除。
 	 * 
 	 * 避免将 null 添加至 Queue 中。
-	 * LinkedList 即实现了 Queue 接口，又实现了 Queue 接口。可以依据实际的使用需求或去响应的接口引用。
+	 * LinkedList 即实现了 List 接口，又实现了 Queue 接口。可以依据实际的使用需求或去响应的接口引用。
 	 * 
 	 * PriorityQueue 按一定优先级获取队列元素。
 	 * PriorityQUeue 它的出队顺序与元素的优先级有关，对 PriorityQueue 调用remove 或 poll 获取总是优先级最高的元素。
