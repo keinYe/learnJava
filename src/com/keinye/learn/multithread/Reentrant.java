@@ -3,9 +3,12 @@ package com.keinye.learn.multithread;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 可冲入所
+ * 
  * @author keinYe
  *
  */
@@ -21,10 +24,18 @@ public class Reentrant {
 	 * 3. 在 synchronized 内部可以调用 notify 和 notifyAll 方法唤醒其他等待线程。
 	 * 4. 必须在已获得的锁对象上调用 notify 和 notifyAll 方法。
 	 * 5. 以唤醒的线程还需要重新获取锁才能够运行。
+	 * 
+	 * Java 提供了 ReentrantLock 锁来替代synchronized。
+	 * ReentrantLock 可以设置获取锁的超时时间，避免长时间无法获取锁。
+	 * 必须先获取到锁，再进入try {...}代码块，最后使用finally保证释放锁。
+	 * 使用 ReentrantLock 时可以配合 Condition 来实现 wait 和 notify 的功能。
+	 * Condition 提供的 await、signal、signalAll 和synchronized 的 wait、notify、notifyAll 功能相同。
+	 * Condition 必须从 lock 对象获取(locl.newCondition())。
 	 */
 	
 	public static void main(String[] args) throws InterruptedException {
 		waitTest();
+		reententLockTest();
 	}
 	public static void waitTest() throws InterruptedException {
 		var q = new TaskQueue();
@@ -60,6 +71,42 @@ public class Reentrant {
         }
  	}
 	
+	public static void reententLockTest() throws InterruptedException {
+		ReentrantLockTest test = new ReentrantLockTest();
+		
+		var add1 = new Thread(()->{
+			try {
+				test.add(10);
+			} catch (InterruptedException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}
+		});
+		
+		var add2 = new Thread(()->{
+			try {
+				test.add(10);
+			} catch (InterruptedException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}			
+		});
+		
+		var add3 = new Thread(()->{
+			try {
+				test.add(10);
+			} catch (InterruptedException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}			
+		});
+		
+		add1.start();
+		add2.start();
+		add1.join();
+		add2.join();
+		add3.start();
+	}
 	
 }
 
@@ -76,5 +123,21 @@ class TaskQueue {
 			wait();
 		}
 		return queue.remove();
+	}
+}
+
+class ReentrantLockTest {
+	private final Lock lock = new ReentrantLock();
+	public void add(int n) throws InterruptedException {
+		if (lock.tryLock(1, TimeUnit.SECONDS)) {
+			try {
+				Thread.sleep(1000);
+			} finally {
+				lock.unlock();
+			}
+			System.out.println(Thread.currentThread() + "获取到 lock");
+		} else {
+			System.out.println(Thread.currentThread() + "超时未获取到 lock");
+		}
 	}
 }
